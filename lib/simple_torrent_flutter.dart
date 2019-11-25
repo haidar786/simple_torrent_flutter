@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:simple_torrent_flutter/torrent_Session_status.dart';
 
 class SimpleTorrentFlutter extends SimpleListener {
   final _channel = MethodChannel('simple_torrent_flutter');
@@ -14,55 +16,53 @@ class SimpleTorrentFlutter extends SimpleListener {
   }
 
 
-  Future<String> torrentPath(String path) async {
-    String status;
+  Future<void> torrentPath(String path) async {
     try {
-      status = await _channel.invokeMethod("start", {"torrentPath": path});
+      await _channel.invokeMethod("start", {"torrentPath": path});
       _handlers();
     } on PlatformException catch (e) {
-      status = e.toString();
+      print(e);
     }
-    return status;
   }
 
   _handlers() async {
     _reverseChannel.setMethodCallHandler((call) async {
       switch (call.method) {
         case "onAddTorrent":
-          simpleListener.onAddTorrent(call.arguments);
+          simpleListener.onAddTorrent(TorrentSessionStatus.fromJson(jsonDecode(call.arguments)));
           break;
         case "onBlockUploaded":
-          simpleListener.onBlockUploaded(call.arguments);
+          simpleListener.onBlockUploaded(TorrentSessionStatus.fromJson(jsonDecode(call.arguments)));
           break;
         case "onMetadataFailed":
-          simpleListener.onMetadataFailed(call.arguments);
+          simpleListener.onMetadataFailed(TorrentSessionStatus.fromJson(jsonDecode(call.arguments)));
           break;
         case "onMetadataReceived":
-          simpleListener.onMetadataReceived(call.arguments);
+          simpleListener.onMetadataReceived(TorrentSessionStatus.fromJson(jsonDecode(call.arguments)));
           break;
         case "onPieceFinished":
-          simpleListener.onPieceFinished(call.arguments);
+          simpleListener.onPieceFinished(TorrentSessionStatus.fromJson(jsonDecode(call.arguments)));
           break;
         case "onTorrentDeleteFailed":
-          simpleListener.onTorrentDeleteFailed(call.arguments);
+          simpleListener.onTorrentDeleteFailed(TorrentSessionStatus.fromJson(jsonDecode(call.arguments)));
           break;
         case "onTorrentDeleted":
-          simpleListener.onTorrentDeleted(call.arguments);
+          simpleListener.onTorrentDeleted(TorrentSessionStatus.fromJson(jsonDecode(call.arguments)));
           break;
         case "onTorrentError":
-          simpleListener.onTorrentError(call.arguments);
+          simpleListener.onTorrentError(TorrentSessionStatus.fromJson(jsonDecode(call.arguments)));
           break;
         case "onTorrentFinished":
-          simpleListener.onTorrentFinished(call.arguments);
+          simpleListener.onTorrentFinished(TorrentSessionStatus.fromJson(jsonDecode(call.arguments)));
           break;
         case "onTorrentPaused":
-          simpleListener.onTorrentPaused(call.arguments);
+          simpleListener.onTorrentPaused(TorrentSessionStatus.fromJson(jsonDecode(call.arguments)));
           break;
         case "onTorrentRemoved":
-          simpleListener.onTorrentRemoved(call.arguments);
+          simpleListener.onTorrentRemoved(TorrentSessionStatus.fromJson(jsonDecode(call.arguments)));
           break;
         case "onTorrentResumed":
-          simpleListener.onTorrentResumed(call.arguments);
+          simpleListener.onTorrentResumed(TorrentSessionStatus.fromJson(jsonDecode(call.arguments)));
           break;
       }
     });
@@ -71,18 +71,18 @@ class SimpleTorrentFlutter extends SimpleListener {
 }
 
 abstract class BaseSimpleListeners {
-  void onAddTorrent(var value);
-  void onBlockUploaded(var value);
-  void onMetadataFailed(var value);
-  void onMetadataReceived(var value);
-  void onPieceFinished(var value);
-  void onTorrentDeleteFailed(var value);
-  void onTorrentDeleted(var value);
-  void onTorrentError(var value);
-  void onTorrentFinished(var value);
-  void onTorrentPaused(var value);
-  void onTorrentRemoved(var value);
-  void onTorrentResumed(var value);
+  void onAddTorrent(TorrentSessionStatus value);
+  void onBlockUploaded(TorrentSessionStatus value);
+  void onMetadataFailed(TorrentSessionStatus value);
+  void onMetadataReceived(TorrentSessionStatus value);
+  void onPieceFinished(TorrentSessionStatus value);
+  void onTorrentDeleteFailed(TorrentSessionStatus value);
+  void onTorrentDeleted(TorrentSessionStatus value);
+  void onTorrentError(TorrentSessionStatus value);
+  void onTorrentFinished(TorrentSessionStatus value);
+  void onTorrentPaused(TorrentSessionStatus value);
+  void onTorrentRemoved(TorrentSessionStatus value);
+  void onTorrentResumed(TorrentSessionStatus value);
 }
 
 class SimpleListener extends BaseSimpleListeners {

@@ -1,13 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:simple_torrent_flutter/simple_torrent_flutter.dart';
+import 'package:flutter_json_widget/flutter_json_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var dataString =
-      await MethodChannel('haidar.example.channel.simple_torrent_flutter').invokeMethod("intent");
+      await MethodChannel('haidar.example.channel.simple_torrent_flutter')
+          .invokeMethod("intent");
   runApp(MyApp(
     path: dataString,
   ));
@@ -21,29 +25,25 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with BaseSimpleListeners {
-  String _videoPath = 'Unknown';
   SimpleTorrentFlutter _simpleTorrentFlutter;
+  Map<String, dynamic> jsonObj;
+
+  String _videoPath = "nothing";
 
   @override
   void initState() {
     _simpleTorrentFlutter = SimpleTorrentFlutter(SimpleListener());
     _simpleTorrentFlutter.simpleListener = this;
+    widget.path ?? _addTorrent();
     super.initState();
   }
 
   Future<void> _addTorrent() async {
-    String videoPath;
     try {
-      videoPath = await _simpleTorrentFlutter.torrentPath(widget.path);
+      await _simpleTorrentFlutter.torrentPath(widget.path);
     } on PlatformException {
-      videoPath = 'Failed to get video path.';
+      print('Failed to get video path.');
     }
-
-    if (!mounted) return;
-
-    setState(() {
-      _videoPath = videoPath;
-    });
   }
 
   @override
@@ -53,18 +53,19 @@ class _MyAppState extends State<MyApp> with BaseSimpleListeners {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Center(
-          child: Column(
-            children: <Widget>[
-              Text('Video path is: $_videoPath\n'),
-              widget.path == null
-                  ? Text("torrent null :)")
-                  : ListTile(
-                      title: Text(widget.path),
-                      onTap: _addTorrent,
-                    )
-            ],
-          ),
+        body:Column(
+          children: <Widget>[
+            Text(_videoPath),
+            widget.path == null
+                ? Text("torrent null :)")
+                : ListTile(
+              title: Text(widget.path),
+              onTap: _addTorrent,
+            ),
+            SafeArea(
+              child: SingleChildScrollView(child: jsonObj != null ? JsonViewerWidget(jsonObj): Container()),
+            ),
+          ],
         ),
       ),
     );
@@ -73,60 +74,96 @@ class _MyAppState extends State<MyApp> with BaseSimpleListeners {
   @override
   void onAddTorrent(value) {
     print(value);
+    setState(() {
+      _videoPath = value.progress.toString();
+    });
   }
 
   @override
   void onBlockUploaded(value) {
-    // TODO: implement onBlockUploaded
+    print(value);
+    setState(() {
+      _videoPath = value.progress.toString();
+    });
   }
 
   @override
   void onMetadataFailed(value) {
-    // TODO: implement onMetadataFailed
+    print(value);
+    setState(() {
+      _videoPath = value.progress.toString();
+    });
   }
 
   @override
   void onMetadataReceived(value) {
-    // TODO: implement onMetadataReceived
+    print(value);
+    setState(() {
+      _videoPath = value.progress.toString();
+    });
   }
 
   @override
   void onPieceFinished(value) {
-    // TODO: implement onPieceFinished
+    print(value);
+    setState(() {
+      _videoPath = value.progress.toString();
+    });
   }
 
   @override
   void onTorrentDeleteFailed(value) {
-    // TODO: implement onTorrentDeleteFailed
+    print(value);
+    setState(() {
+      _videoPath = value.progress.toString();
+    });
   }
 
   @override
   void onTorrentDeleted(value) {
-    // TODO: implement onTorrentDeleted
+    print(value);
+    setState(() {
+      _videoPath = value.progress.toString();
+    });
   }
 
   @override
   void onTorrentError(value) {
-    // TODO: implement onTorrentError
+    print(value);
+    setState(() {
+      _videoPath = value.progress.toString();
+    });
   }
 
   @override
   void onTorrentFinished(value) {
-    // TODO: implement onTorrentFinished
+    print(value);
+    setState(() {
+      _videoPath = value.progress.toString();
+    });
   }
 
   @override
   void onTorrentPaused(value) {
-    // TODO: implement onTorrentPaused
+    print(value);
+    setState(() {
+      _videoPath = value.progress.toString();
+    });
   }
 
   @override
   void onTorrentRemoved(value) {
-    // TODO: implement onTorrentRemoved
+    print(value);
+    setState(() {
+      _videoPath = value.progress.toString();
+    });
   }
 
   @override
   void onTorrentResumed(value) {
-    // TODO: implement onTorrentResumed
+    print(value);
+    setState(() {
+      _videoPath = value.progress.toString();
+    });
   }
 }
