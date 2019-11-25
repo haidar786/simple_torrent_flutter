@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:simple_torrent_flutter/simple_torrent_flutter.dart';
-import 'package:flutter_json_widget/flutter_json_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,15 +23,17 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> with BaseSimpleListeners {
   SimpleTorrentFlutter _simpleTorrentFlutter;
-  Map<String, dynamic> jsonObj;
 
   String _videoPath = "nothing";
+  List list = List<Widget>();
+
+  String _videoUri = "uri none";
 
   @override
   void initState() {
+    list.add(Text("hey"));
     _simpleTorrentFlutter = SimpleTorrentFlutter(SimpleListener());
     _simpleTorrentFlutter.simpleListener = this;
-    widget.path ?? _addTorrent();
     super.initState();
   }
 
@@ -53,19 +52,20 @@ class _MyAppState extends State<MyApp> with BaseSimpleListeners {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body:Column(
-          children: <Widget>[
-            Text(_videoPath),
-            widget.path == null
-                ? Text("torrent null :)")
-                : ListTile(
-              title: Text(widget.path),
-              onTap: _addTorrent,
-            ),
-            SafeArea(
-              child: SingleChildScrollView(child: jsonObj != null ? JsonViewerWidget(jsonObj): Container()),
-            ),
-          ],
+        body: Center(
+          child: ListView(
+            children: <Widget>[
+              Text(_videoPath),
+              Text(_videoUri),
+              widget.path == null
+                  ? Text("torrent null :)")
+                  : ListTile(
+                      title: Text(widget.path),
+                      onTap: _addTorrent,
+                    ),
+              Column(children: list)
+            ],
+          ),
         ),
       ),
     );
@@ -74,6 +74,7 @@ class _MyAppState extends State<MyApp> with BaseSimpleListeners {
   @override
   void onAddTorrent(value) {
     print(value);
+    list.add(Text("onAddTorrent"));
     setState(() {
       _videoPath = value.progress.toString();
     });
@@ -81,6 +82,7 @@ class _MyAppState extends State<MyApp> with BaseSimpleListeners {
 
   @override
   void onBlockUploaded(value) {
+    list.add(Text("onBlockUploaded"));
     print(value);
     setState(() {
       _videoPath = value.progress.toString();
@@ -90,6 +92,7 @@ class _MyAppState extends State<MyApp> with BaseSimpleListeners {
   @override
   void onMetadataFailed(value) {
     print(value);
+    list.add(Text("onMetaDataFailed"));
     setState(() {
       _videoPath = value.progress.toString();
     });
@@ -98,6 +101,7 @@ class _MyAppState extends State<MyApp> with BaseSimpleListeners {
   @override
   void onMetadataReceived(value) {
     print(value);
+    list.add(Text("onMetadataRecerived"));
     setState(() {
       _videoPath = value.progress.toString();
     });
@@ -106,6 +110,7 @@ class _MyAppState extends State<MyApp> with BaseSimpleListeners {
   @override
   void onPieceFinished(value) {
     print(value);
+    list.add( Text("onPieceFinished"));
     setState(() {
       _videoPath = value.progress.toString();
     });
@@ -114,6 +119,7 @@ class _MyAppState extends State<MyApp> with BaseSimpleListeners {
   @override
   void onTorrentDeleteFailed(value) {
     print(value);
+    list.add(Text("onTorrentDeleteFailed"));
     setState(() {
       _videoPath = value.progress.toString();
     });
@@ -122,6 +128,7 @@ class _MyAppState extends State<MyApp> with BaseSimpleListeners {
   @override
   void onTorrentDeleted(value) {
     print(value);
+    list.add(Text("onTorrentDeleted"));
     setState(() {
       _videoPath = value.progress.toString();
     });
@@ -130,6 +137,7 @@ class _MyAppState extends State<MyApp> with BaseSimpleListeners {
   @override
   void onTorrentError(value) {
     print(value);
+    list.add(Text("onTorrentError"));
     setState(() {
       _videoPath = value.progress.toString();
     });
@@ -138,6 +146,8 @@ class _MyAppState extends State<MyApp> with BaseSimpleListeners {
   @override
   void onTorrentFinished(value) {
     print(value);
+    list.add(Text("onTorrentFinished"));
+
     setState(() {
       _videoPath = value.progress.toString();
     });
@@ -146,6 +156,7 @@ class _MyAppState extends State<MyApp> with BaseSimpleListeners {
   @override
   void onTorrentPaused(value) {
     print(value);
+    list.add(Text("onTorrentPause"));
     setState(() {
       _videoPath = value.progress.toString();
     });
@@ -154,6 +165,7 @@ class _MyAppState extends State<MyApp> with BaseSimpleListeners {
   @override
   void onTorrentRemoved(value) {
     print(value);
+    list.add(Text("onTorrentRemoved"));
     setState(() {
       _videoPath = value.progress.toString();
     });
@@ -162,8 +174,10 @@ class _MyAppState extends State<MyApp> with BaseSimpleListeners {
   @override
   void onTorrentResumed(value) {
     print(value);
+    list.add(Text("onTorrentResumed"));
     setState(() {
       _videoPath = value.progress.toString();
+      _videoUri = value.videoFileUri;
     });
   }
 }

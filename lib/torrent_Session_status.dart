@@ -3,30 +3,44 @@ class TorrentSessionStatus {
   int bytesDownloaded;
   int bytesWanted;
   int downloadRate;
-  MagnetUri magnetUri;
+  String magnetUri;
   double progress;
-  MagnetUri saveLocationUri;
+  String saveLocationUri;
   int seederCount;
   String state;
   TorrentSessionBuffer torrentSessionBuffer;
   int uploadRate;
-  MagnetUri videoFileUri;
+  String videoFileUri;
 
-  TorrentSessionStatus({this.bencode, this.bytesDownloaded, this.bytesWanted, this.downloadRate, this.magnetUri, this.progress, this.saveLocationUri, this.seederCount, this.state, this.torrentSessionBuffer, this.uploadRate, this.videoFileUri});
+  TorrentSessionStatus(
+      {this.bencode,
+        this.bytesDownloaded,
+        this.bytesWanted,
+        this.downloadRate,
+        this.magnetUri,
+        this.progress,
+        this.saveLocationUri,
+        this.seederCount,
+        this.state,
+        this.torrentSessionBuffer,
+        this.uploadRate,
+        this.videoFileUri});
 
   TorrentSessionStatus.fromJson(Map<String, dynamic> json) {
     bencode = json['bencode'].cast<int>();
     bytesDownloaded = json['bytesDownloaded'];
     bytesWanted = json['bytesWanted'];
     downloadRate = json['downloadRate'];
-    magnetUri = json['magnetUri'] != null ? new MagnetUri.fromJson(json['magnetUri']) : null;
+    magnetUri = json['magnetUri'];
     progress = json['progress'];
-    saveLocationUri = json['saveLocationUri'] != null ? new MagnetUri.fromJson(json['saveLocationUri']) : null;
+    saveLocationUri = json['saveLocationUri'];
     seederCount = json['seederCount'];
     state = json['state'];
-    torrentSessionBuffer = json['torrentSessionBuffer'] != null ? new TorrentSessionBuffer.fromJson(json['torrentSessionBuffer']) : null;
+    torrentSessionBuffer = json['torrentSessionBuffer'] != null
+        ? new TorrentSessionBuffer.fromJson(json['torrentSessionBuffer'])
+        : null;
     uploadRate = json['uploadRate'];
-    videoFileUri = json['videoFileUri'] != null ? new MagnetUri.fromJson(json['videoFileUri']) : null;
+    videoFileUri = json['videoFileUri'];
   }
 
   Map<String, dynamic> toJson() {
@@ -35,38 +49,18 @@ class TorrentSessionStatus {
     data['bytesDownloaded'] = this.bytesDownloaded;
     data['bytesWanted'] = this.bytesWanted;
     data['downloadRate'] = this.downloadRate;
-    if (this.magnetUri != null) {
-      data['magnetUri'] = this.magnetUri.toJson();
-    }
+    data['magnetUri'] = this.magnetUri;
     data['progress'] = this.progress;
-    if (this.saveLocationUri != null) {
-      data['saveLocationUri'] = this.saveLocationUri.toJson();
-    }
+    data['saveLocationUri'] = this.saveLocationUri;
     data['seederCount'] = this.seederCount;
     data['state'] = this.state;
     if (this.torrentSessionBuffer != null) {
       data['torrentSessionBuffer'] = this.torrentSessionBuffer.toJson();
     }
     data['uploadRate'] = this.uploadRate;
-    if (this.videoFileUri != null) {
-      data['videoFileUri'] = this.videoFileUri.toJson();
-    }
+    data['videoFileUri'] = this.videoFileUri;
     return data;
   }
-}
-
-class MagnetUri {
-
-
-  MagnetUri();
-
-MagnetUri.fromJson(Map<String, dynamic> json) {
-}
-
-Map<String, dynamic> toJson() {
-  final Map<String, dynamic> data = new Map<String, dynamic>();
-  return data;
-}
 }
 
 class TorrentSessionBuffer {
@@ -80,7 +74,16 @@ class TorrentSessionBuffer {
   List<bool> pieceDownloadStates;
   int startIndex;
 
-  TorrentSessionBuffer({this.bufferHeadIndex, this.bufferSize, this.bufferTailIndex, this.downloadedPieceCount, this.endIndex, this.lastDownloadedPieceIndex, this.pieceCount, this.pieceDownloadStates, this.startIndex});
+  TorrentSessionBuffer(
+      {this.bufferHeadIndex,
+        this.bufferSize,
+        this.bufferTailIndex,
+        this.downloadedPieceCount,
+        this.endIndex,
+        this.lastDownloadedPieceIndex,
+        this.pieceCount,
+        this.pieceDownloadStates,
+        this.startIndex});
 
   TorrentSessionBuffer.fromJson(Map<String, dynamic> json) {
     bufferHeadIndex = json['bufferHeadIndex'];
